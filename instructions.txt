@@ -1,0 +1,196 @@
+# Smash Bot Setup Instructions
+
+## Discord Bot Creation and Setup
+
+1. Go to the Discord Developer Portal: https://discord.com/developers/applications
+2. Click "New Application" and name it "Smash Bot" 🤖
+3. Go to the "Bot" section on the left sidebar.
+4. Click "Add Bot" to create the bot.
+5. Under "Token", click "Copy" to get your bot token. Keep this secret! 🔒
+6. Scroll down to "Privileged Gateway Intents" and enable:
+   - Server Members Intent (for managing roles)
+7. Go to the "OAuth2" section, then "URL Generator".
+8. Select scopes: "bot" and "applications.commands"
+9. Select permissions:
+   - Send Messages
+   - Use Slash Commands
+   - Read Message History
+   - Manage Roles (for tier role management)
+   - Manage Messages (optional, for cleaning up)
+10. Copy the generated URL and paste it in your browser to invite the bot to your server.
+
+## Server Setup in Discord
+
+1. In your Discord server, create the following roles (in order of hierarchy, highest to lowest):
+   - S
+   - A+
+   - A-
+   - B+
+   - B-
+   - C+
+   - C-
+   - D+
+   - D-
+   - F
+   (Assign colors if desired, e.g., gold for S, silver for A+, etc.)
+2. Create a text channel named "game-logs" where game results will be posted. 📝
+   - **Important:** Make sure the bot has "Send Messages" and "Read Message History" permissions in this channel!
+   - Right-click the channel → Edit Channel → Permissions → Add the bot's role and enable these permissions
+
+## Local Development Setup
+
+1. Ensure you have Python 3.8+ installed.
+   - Check with: `python3 --version`
+   - On macOS, Python is typically installed as `python3`
+2. Clone or download this project to your local machine.
+3. Install dependencies:
+   ```
+   pip3 install -r requirements.txt
+   ```
+   - On macOS, pip is typically `pip3`
+4. Set your bot token as an environment variable:
+   - On Windows: `set DISCORD_TOKEN=your_token_here`
+   - On macOS/Linux: `export DISCORD_TOKEN=your_token_here`
+5. Run the bot:
+   ```
+   python3 commands.py
+   ```
+6. The bot should now be online in your Discord server! 🎉
+
+## Setting Up a Git Repository
+
+To version control your Smash Bot project and make it easy to share or deploy:
+
+1. **Initialize Git repository**:
+   ```
+   git init
+   ```
+
+2. **Add all project files to Git**:
+   ```
+   git add .
+   ```
+
+3. **Create your first commit**:
+   ```
+   git commit -m "Initial commit: Smash Bot setup"
+   ```
+
+4. **Create a repository on GitHub**:
+   - Go to https://github.com and sign in
+   - Click the "+" icon → "New repository"
+   - Name it "smash-bot" (or your preferred name)
+   - Don't initialize with README, .gitignore, or license (we already have files)
+   - Click "Create repository"
+
+5. **Connect local repo to GitHub** (replace `yourusername` with your GitHub username):
+   ```
+   git remote add origin https://github.com/yourusername/smash-bot.git
+   ```
+
+6. **Push your code to GitHub**:
+   ```
+   git push -u origin main
+   ```
+
+7. **Optional: Create a .gitignore file** to exclude sensitive files:
+   ```
+   echo "*.env" > .gitignore
+   echo "DISCORD_TOKEN" >> .gitignore
+   git add .gitignore
+   git commit -m "Add .gitignore for sensitive files"
+   git push
+   ```
+
+Your Smash Bot is now version controlled and backed up on GitHub! 🔄
+
+## Hosting on Digital Ocean
+
+1. Create a Digital Ocean account if you don't have one.
+2. Create a new Droplet:
+   - Choose Ubuntu 22.04 LTS (or latest LTS)
+   - Select the cheapest plan ($6/month Basic)
+   - Choose a datacenter region close to you
+   - Under "Authentication", select "SSH keys" and add your public key, or use password
+   - Click "Create Droplet"
+3. Once the Droplet is created, SSH into it:
+   ```
+   ssh root@your_droplet_ip
+   ```
+4. Update the system:
+   ```
+   sudo apt update && sudo apt upgrade -y
+   ```
+5. Install Python and pip:
+   ```
+   sudo apt install python3 python3-pip -y
+   ```
+6. Install Git (to clone the repo):
+   ```
+   sudo apt install git -y
+   ```
+7. Clone your repository (replace with your repo URL):
+   ```
+   git clone https://github.com/yourusername/smash-bot.git
+   cd smash-bot
+   ```
+   (If you don't have a Git repo, upload the files via SCP or SFTP)
+8. Install dependencies:
+   ```
+   pip3 install -r requirements.txt
+   ```
+9. Set the bot token as an environment variable. For security, create a .env file or set it in the command:
+   ```
+   export DISCORD_TOKEN=your_token_here
+   ```
+10. Run the bot in the background:
+    ```
+    nohup python3 commands.py &
+    ```
+    (nohup keeps it running after logout, & runs in background)
+11. Check if it's running:
+    ```
+    ps aux | grep python
+    ```
+12. To stop the bot:
+    ```
+    pkill -f commands.py
+    ```
+13. For persistent running, consider using PM2:
+    ```
+    sudo npm install -g pm2
+    pm2 start commands.py --name smash-bot
+    pm2 save
+    pm2 startup
+    ```
+    (This will keep the bot running even after reboots)
+
+## Usage
+
+**Player Management:**
+- `/addplayer [name] [discord_id]` - Add a new player to the system 👤
+- `/removeplayer [discord_id]` - Remove a player 🗑️
+- `/settier [player] [tier]` - Manually set a player's tier ⚙️
+
+**Games:**
+- `/addgame` - Add a new game with autocomplete 🎮
+  - Select players, characters, ranked/unranked, winner, stocks, and percentage
+- `/removegame [id]` - Remove a game by ID 🗑️
+
+**Statistics & Info:**
+- `/tierlist` - View the current tier rankings 📊
+- `/stats [player]` - View player's overall stats 📈
+- `/stats [player] characters` - View player's top characters by winrate 🏆
+- `/stats [player] [character]` - View player's stats with a specific character 🎯
+
+**Valid Tiers:** S, A+, A-, B+, B-, C+, C-, D+, D-, F
+
+## Notes
+
+- Ensure the bot has the necessary permissions in your server.
+- The "game-logs" channel must exist for game logging to work.
+- Tier roles must be created exactly as specified (S, A+, etc.).
+- The bot uses JSON files for data storage, so data persists between restarts.
+- For production, consider using a database instead of JSON files.
+
+Enjoy your Smash Bot! 🕹️

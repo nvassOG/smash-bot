@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Mo",
+        "discord_id": "213346391513104385",
+        "current_tier": "F"
+    },
+    {
+        "id": 2,
+        "name": "Nick",
+        "discord_id": "174261401651511297",
+        "current_tier": "F"
+    },
+    {
+        "id": 3,
+        "name": "Eric",
+        "discord_id": "114574521465438215",
+        "current_tier": "F"
+    },
+    {
+        "id": 4,
+        "name": "Doob",
+        "discord_id": "191258386342346752",
+        "current_tier": "F"
+    }
+]
